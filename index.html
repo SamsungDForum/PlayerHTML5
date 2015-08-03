@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=1920">
+    <title>HTML5Video</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+    <script type='text/javascript' src='main.js'></script>
+</head>
+
+<body>
+    <h1>Tizen Video App</h1>
+    <h2>Video player based on HTML5 video tag</h2>
+    <div class="left">
+        <h2>Available buttons/actions:</h2>
+        <div>
+            1 - change source<br/>
+        </div>
+    </div>
+    <div class="right">
+
+        <h2>Info</h2>
+
+        <p>MP4 files can be tested in Tizen Simulator. Other formats need TV.</p>
+
+        <p>The application downloads video content from <code>http://media.w3.org</code> - it will not work if this domain is not accessible<br>
+
+            You can change the source for video content by modifying contents of <code>sources</code> array in <code>main.js</code> file</cide></p>
+
+        <h2>Operation</h2>
+        <p>
+            Use remote to operate on video player.<br />
+            Available keys: PLAY, PAUSE, FW, RW, STOP, RETURN, PLAY/PAUSE (Smart Remote 2015)
+        </p>
+
+        <fieldset>
+            <legend>Logs: </legend>
+            <div class="logs" id="logs"></div>
+        </fieldset>
+    </div>
+</body>
+</html>

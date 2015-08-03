@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets"
+        xmlns:tizen="http://tizen.org/ns/widgets"
+        id="http://yourdomain/PlayerHTML5"
+        version="1.1.0" viewmodes="maximized">
+    <access origin="http://media.w3.org" subdomains="true"></access>
+    <tizen:application id="demoapp020.PlayerHTML5"
+                       package="demoapp020"
+                       required_version="2.3"/>
+    <content src="index.html"/>
+    <feature name="http://tizen.org/feature/screen.size.all"/>
+    <icon src="icon.png"/>
+    <name>PlayerHTML5</name>
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <tizen:profile name="tv"/>
+    <tizen:setting screen-orientation="auto-rotation"
+                   background-support="disable"
+                   encryption="disable"
+                   hwkey-event="disable"/>
+</widget>
