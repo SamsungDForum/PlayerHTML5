@@ -47,9 +47,7 @@
      */
     function registerKeyHandler() {
         document.addEventListener('keydown', function (e) {
-            var tmp = null;
             var seekJump = 5;
-
             switch (e.keyCode) {
                 //key RETURN
                 case 10009:
@@ -64,12 +62,17 @@
 
                 //key STOP
                 case 413:
-                    player.pause();
+                    pause();
                     player.currentTime = 0;
                     break;
 
-                case 10252: //key PLAY_PAUSE
-                case 19: //key PAUSE
+                //key PAUSE
+                case 19:
+                	pause();
+                	break;
+               
+                //key PLAY_PAUSE
+                case 10252: 
                     if (paused) {
                         play();
                     } else {
@@ -77,39 +80,21 @@
                     }
                     break;
 
-                //key VOLUME UP
-                case 447:
-                    try {
-                        player.volume += 0.1;
-                    } catch (e) {
-                        log("Volume is already at maximum.");
-                    }
-                    break;
-
-                //key VOLUME DOWN
-                case 448:
-                    try {
-                        player.volume -= 0.1;
-                    } catch (e) {
-                        log("Volume is already at minimum.");
-                    }
-                    break;
-
                 //key FF
-                case 10233:
+                case 417:
                     if (!player.seeking && player.currentTime + seekJump < player.seekable.end(0)) {
-                        player.pause();
+                        pause();
                         player.currentTime += seekJump;
-                        player.play();
+                        play();
                     }
                     break;
 
                 //key REWIND
-                case 10232:
+                case 412:
                     if (!player.seeking && player.currentTime - seekJump > player.seekable.start(0)) {
-                        player.pause();
+                        pause();
                         player.currentTime -= seekJump;
-                        player.play();
+                        play();
                     }
                     break;
 
@@ -120,7 +105,7 @@
                     break;
 
                 default:
-                    log("Unhandled key: " + keyCode);
+                    log("Unhandled key: " + e.keyCode);
                     break;
             }
         });
@@ -177,13 +162,14 @@
             }
         });
 
-        return player
+        return player;
     }
 
     /**
      * Stop the player when application is closed.
      */
     function onUnload() {
+    	log('onUnload');
         player.pause();
         player.currentTime = 0;
     }
@@ -213,16 +199,16 @@
      * Create video element if it does not exist yet.
      */
     function play() {
-        player.play();
         paused = false;
+        player.play();
     }
 
     /**
      * Function to pause video playback.
      */
     function pause() {
-        player.pause();
         paused = true;
+        player.pause();
     }
 
 
@@ -242,5 +228,5 @@
         document.querySelector('.left').appendChild(player);
 
         document.body.addEventListener('unload', onUnload);
-    }
+    };
 })();
