@@ -71,3 +71,17 @@ video {
     top: 5px;
     left: 5px;
 }
+
+.progress {
+    margin: 10px;
+    width: 90%;
+    height: 3px;
+    border: 1px solid #4c4646;
+    visibility: hidden;
+}
+
+.bar {
+    width: 0%;
+    height: 3px;
+    background-color: #fff;
+}

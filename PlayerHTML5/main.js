@@ -26,7 +26,6 @@
     function registerKeys() {
         var usedKeys = [
             'MediaFastForward',
-            'MediaPlayPause',
             'MediaPause',
             'MediaPlay',
             'MediaRewind',
@@ -62,39 +61,25 @@
 
                 //key STOP
                 case 413:
-                    pause();
-                    player.currentTime = 0;
+                    stop();
                     break;
 
                 //key PAUSE
                 case 19:
                 	pause();
                 	break;
-               
-                //key PLAY_PAUSE
-                case 10252: 
-                    if (paused) {
-                        play();
-                    } else {
-                        pause();
-                    }
-                    break;
 
                 //key FF
                 case 417:
                     if (!player.seeking && player.currentTime + seekJump < player.seekable.end(0)) {
-                        pause();
                         player.currentTime += seekJump;
-                        play();
                     }
                     break;
 
                 //key REWIND
                 case 412:
                     if (!player.seeking && player.currentTime - seekJump > player.seekable.start(0)) {
-                        pause();
                         player.currentTime -= seekJump;
-                        play();
                     }
                     break;
 
@@ -121,9 +106,8 @@
         document.body.appendChild(el);
     }
 
-    var paused = true;
-    var posters = ['img/BUNNY_poster.jpg', 'img/SINTEL_poster.jpg'];
-    var sources = ['http://media.w3.org/2010/05/bunny/trailer.mp4', 'http://media.w3.org/2010/05/sintel/trailer.mp4'];
+    var posters = ['img/SINTEL_poster.jpg', 'img/BUNNY_poster.jpg'];
+    var sources = ['http://media.w3.org/2010/05/sintel/trailer.mp4', 'http://media.w3.org/2010/05/bunny/trailer.mp4'];
     var currentSource = 0;
     var player = null;
 
@@ -131,38 +115,34 @@
      * Creates HTML video tag and adds all event listeners
      */
     function createPlayer() {
-        var player = document.createElement('video');
+        var _player = document.createElement('video');
+        
+        _player.poster = posters[currentSource];
+        _player.src = sources[currentSource];
+        _player.load();
 
-        player.src = sources[0];
-        player.poster = posters[0];
-
-        player.addEventListener('loadeddata', function (e) {
+        _player.addEventListener('loadeddata', function () {
             log("Movie loaded.");
         });
-        player.addEventListener('loadedmetadata', function (e) {
+        _player.addEventListener('loadedmetadata', function () {
             log("Meta data loaded.");
         });
-        player.addEventListener('timeupdate', function (e) {
-            log("Current time: " + player.currentTime);
+        _player.addEventListener('timeupdate', function () {
+            log("Current time: " + _player.currentTime);
+            progress.updateProgress(_player.currentTime, _player.duration);
         });
-        player.addEventListener('play', function (e) {
+        _player.addEventListener('play', function () {
             log("Playback started.");
         });
-        player.addEventListener('pause', function (e) {
+        _player.addEventListener('pause', function () {
             log("Playback paused.");
         });
-        player.addEventListener('ended', function (e) {
+        _player.addEventListener('ended', function () {
             log("Playback finished.");
-        });
-        player.addEventListener('click', function (e) {
-            if (paused) {
-                play();
-            } else {
-                pause();
-            }
+            init();
         });
 
-        return player;
+        return _player;
     }
 
     /**
@@ -170,8 +150,7 @@
      */
     function onUnload() {
     	log('onUnload');
-        player.pause();
-        player.currentTime = 0;
+        stop();
     }
 
     /**
@@ -190,8 +169,18 @@
             document.querySelector('.left').appendChild(player);
         }
 
+        init();
+    }
+    
+    /**
+     * Function to init video playback.
+     */
+    function init() {
         player.poster = posters[currentSource];
         player.src = sources[currentSource];
+        player.load();
+        progress.hide();
+        progress.reset();
     }
 
     /**
@@ -199,7 +188,6 @@
      * Create video element if it does not exist yet.
      */
     function play() {
-        paused = false;
         player.play();
     }
 
@@ -207,10 +195,49 @@
      * Function to pause video playback.
      */
     function pause() {
-        paused = true;
         player.pause();
     }
+    
+    /**
+     * Function to stop video playback.
+     */
+    function stop() {
+        player.pause();
+        player.currentTime = 0;
+        
+        init();
+    }
+    
+    /**
+     * Object handling updating of progress bar
+     */
+    var progress = {
+        init: function () {
+            this.dom = document.getElementById('progress');
+            this.barEl = document.getElementById('bar');
+            
+            this.reset();
+        },
 
+        reset: function () {
+            this.barEl.style.width = 0;
+            this.show();
+        },
+
+        updateProgress: function (elapsed, total) {
+            var progress = 100 * elapsed / total;
+
+            this.barEl.style.width = progress + '%';
+        },
+
+        show: function () {
+            this.dom.style.visibility = "visible";
+        },
+
+        hide: function () {
+            this.dom.style.visibility = "hidden";
+        }
+    };
 
     /**
      * Start the application once loading is finished
@@ -220,13 +247,15 @@
             log('This application needs to be run on Tizen device');
             return;
         }
-
+        
+        progress.init();
+        
         displayVersion();
         registerKeys();
         registerKeyHandler();
         player = createPlayer();
         document.querySelector('.left').appendChild(player);
-
+        
         document.body.addEventListener('unload', onUnload);
     };
 })();

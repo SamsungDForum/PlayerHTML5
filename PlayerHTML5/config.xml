@@ -8,5 +8,4 @@
     <name>PlayerHTML5</name>
     <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
     <tizen:profile name="tv"/>
-    <tizen:setting screen-orientation="auto-rotation" background-support="disable" encryption="disable" hwkey-event="disable"/>
 </widget>
